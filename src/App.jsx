@@ -147,57 +147,59 @@ export default function App() {
                 {view === 'landing' ? (
                     <motion.div 
                         key="landing"
-                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 0.95, filter: 'blur(10px)' }}
+                        initial={{ opacity: 0 }} 
+                        animate={{ opacity: 1 }} 
+                        exit={{ opacity: 0, filter: 'blur(20px)' }}
                         className="relative z-50 w-full h-full flex flex-col items-center justify-center p-6 text-center"
                     >
-                        {/* DARK OVERLAY FOR READABILITY */}
-                        <div className="absolute inset-0 bg-black/60 backdrop-blur-[1px]" />
+                        {/* CINEMATIC OVERLAY */}
+                        <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
                         
                         <div className="relative z-10 max-w-4xl w-full flex flex-col items-center">
                             <motion.h1 
                                 initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}
-                                className="text-[70px] md:text-[140px] font-black tracking-tighter leading-none mb-4 drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]"
+                                className="text-[80px] md:text-[160px] font-black tracking-tighter leading-none mb-6 drop-shadow-[0_0_50px_rgba(255,255,255,0.15)]"
                             >
                                 QUORUM
                             </motion.h1>
                             
                             <motion.p 
                                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
-                                className="text-xl md:text-3xl font-bold text-white mb-2"
+                                className="text-xl md:text-4xl font-bold text-white mb-4 drop-shadow-lg"
                             >
                                 "Find your way in a crowded stadium"
                             </motion.p>
                             
                             <motion.p 
                                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
-                                className="text-sm md:text-lg font-medium text-white/40 uppercase tracking-[0.2em] mb-16"
+                                className="text-xs md:text-xl font-medium text-white/40 uppercase tracking-[0.3em] mb-20"
                             >
-                                Enter your seat and get the best route
+                                Enter your seat and get the best route instantly
                             </motion.p>
 
-                            {/* BIG INPUT & GLOWING BUTTON */}
+                            {/* PRIMARY INPUT AREA */}
                             <motion.form 
                                 onSubmit={handleHeroSubmit}
                                 initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.8 }}
-                                className="w-full max-w-2xl"
+                                className="w-full max-w-3xl flex flex-col items-center gap-8"
                             >
-                                <div className="flex flex-col gap-6 items-center">
+                                <div className="relative w-full group">
                                     <input 
                                         type="text" 
                                         value={seatInput}
                                         onChange={(e) => setSeatInput(e.target.value)}
-                                        placeholder="Enter your seat (example: A12)"
-                                        className="w-full h-16 md:h-24 bg-white/5 backdrop-blur-3xl border-2 border-white/10 rounded-[2rem] px-10 text-xl md:text-2xl font-bold text-white text-center placeholder:text-white/20 focus:outline-none focus:border-[#10b981] focus:ring-4 focus:ring-[#10b981]/20 transition-all shadow-2xl"
+                                        placeholder="Enter your seat (e.g. A12)"
+                                        className="w-full h-20 md:h-32 bg-white/5 backdrop-blur-3xl border-2 border-white/10 rounded-[2.5rem] px-12 text-2xl md:text-4xl font-black text-white text-center placeholder:text-white/10 focus:outline-none focus:border-[#10b981] focus:ring-8 focus:ring-[#10b981]/10 transition-all shadow-2xl group-hover:bg-white/10"
                                         autoFocus
                                     />
-                                    <button 
-                                        type="submit"
-                                        className="w-full md:w-auto px-20 py-6 bg-[#10b981] text-black font-black uppercase tracking-[0.3em] rounded-full hover:scale-105 active:scale-95 transition-all shadow-[0_0_50px_rgba(16,185,129,0.4)] relative group"
-                                    >
-                                        <div className="absolute inset-0 bg-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity animate-pulse" />
-                                        Show My Way
-                                    </button>
+                                    <div className="absolute inset-0 rounded-[2.5rem] pointer-events-none shadow-[0_0_60px_rgba(16,185,129,0.1)] group-focus-within:shadow-[0_0_80px_rgba(16,185,129,0.2)] transition-all" />
                                 </div>
+                                <button 
+                                    type="submit"
+                                    className="px-16 py-6 bg-[#10b981] text-black font-black uppercase tracking-[0.4em] rounded-full hover:scale-105 active:scale-95 transition-all shadow-[0_0_50px_rgba(16,185,129,0.4)] flex items-center gap-6"
+                                >
+                                    Show My Way <ArrowRight size={24} />
+                                </button>
                             </motion.form>
                         </div>
                     </motion.div>
