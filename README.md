@@ -1,205 +1,67 @@
-# Quorum
-# 🏟️ QUORUM — The Autonomous Smart Venue Assistant
+# QUORUM — Crowd Safety OS (v7.0.2) 🛡️🏟️
 
-### *Real-Time Crowd Intelligence for Seamless Event Experiences*
-
----
-
-## 🌐 Overview
-
-**QUORUM** is an AI-powered smart assistant designed to **enhance the physical experience of attendees at large-scale sporting venues**.
-
-It intelligently manages **crowd movement, reduces waiting times, and enables real-time coordination**, transforming chaotic environments into **smooth, safe, and enjoyable experiences**.
+**QUORUM** is a next-generation, high-fidelity crowd coordination system designed for large-scale stadiums and events. Built with a "Mission Control" philosophy, it delivers real-time situational awareness and intelligent navigation guidance to ensure attendee safety and operational fluidly.
 
 ---
 
-## 🛑 The Problem
+## 💎 The Experience
+Quorum transforms the chaotic stadium environment into a structured, manageable tactical space. 
 
-Large sporting venues (50,000+ attendees) face critical challenges:
-
-* 🚶 **Crowd Congestion:** Uncontrolled movement leads to bottlenecks at gates, corridors, and exits
-* ⏳ **Long Waiting Times:** Food stalls, washrooms, and entry gates become overcrowded
-* 📡 **Network Failures:** Internet becomes unreliable during peak load
-* 🚨 **Delayed Coordination:** Staff and attendees lack real-time situational awareness
-* 🧭 **Navigation Confusion:** Users struggle to find seats, washrooms, or facilities
-
-👉 Result: **Frustration, inefficiency, and safety risks**
+*   **Cinematic Immersion**: A full-screen, high-definition stadium backdrop with dynamic lighting and camera effects.
+*   **Zero-Clutter Flow**: A 3-step user journey (Seat -> Detection -> Action) designed for 5-second decision making.
+*   **Intelligent Guidance**: Real-time routing engine that calculates the safest and fastest paths to Exits, Washrooms, and Food Courts based on live sector density.
+*   **Sentinel AI**: A bilingual (English/Hindi) context-aware tactical assistant that answers safety queries and monitors zone health.
 
 ---
 
-## 💡 The Solution
+## 🚀 Core Features
 
-QUORUM introduces a **Smart Venue Intelligence System** that provides:
+### 1. Tactical Dashboard
+*   **Live Stadium Engine**: Interactive SVG map with glowing zone highlights and real-time density-aware color coding.
+*   **Active Routing**: High-contrast, animated "Wow Effect" paths that guide users through optimal transit corridors.
+*   **Situational Alerts**: Auto-dismissing tactical notifications for high congestion or facility lockdowns.
 
-* 🗺️ Real-time crowd-aware navigation
-* ⏱️ Accurate wait-time predictions (food, washrooms, gates)
-* 📊 Live crowd density visualization
-* 🚨 Instant emergency coordination
-* 🤖 AI-powered decision assistance
+### 2. Sentinel AI Assistant
+*   **Bilingual Support**: Full English and Hindi integration for inclusive safety support.
+*   **Context Awareness**: The AI understands your specific seat and sector to provide localized guidance.
+*   **Quick Replies**: One-tap queries for immediate exit routes and safety status.
 
----
-
-## 🧠 How It Works
-
-QUORUM continuously analyzes simulated crowd data and provides **context-aware guidance** to users.
-
-### Example:
-
-* 🚻 “Washroom A: 2 min wait (nearby)”
-* 🍔 “Food Stall B: crowded — try Stall C (5 min faster)”
-* 🚪 “Gate 1 congested — use Gate 3 (fast entry)”
+### 3. Mission-Critical Reliability
+*   **Optimized Performance**: 60FPS animations and GPU-accelerated rendering.
+*   **Responsive Multi-Device**: Pixel-perfect performance on Mobile, Tablet, and Desktop.
+*   **Hardened Security**: Strict regex-based input validation and secure Firestore data architecture.
 
 ---
 
-## 🚀 Key Features
-
-### 🗺️ 1. Smart Crowd Navigation
-
-* Real-time crowd heatmap (Green → Free, Red → Congested)
-* Dynamic rerouting to avoid crowded paths
-* Helps users reach seats, exits, food stalls, and washrooms efficiently
-
----
-
-### ⏱️ 2. Wait Time Prediction (Major Highlight)
-
-* Tracks wait times for:
-
-  * 🚪 Entry Gates
-  * 🍔 Food & Beverage Stalls
-  * 🚻 Washrooms
-* Suggests **faster alternatives automatically**
-
-👉 Reduces frustration and saves time
+## 🛠️ Technology Stack
+*   **Framework**: [React.js](https://reactjs.org/) (Vite)
+*   **Visuals**: [Framer Motion](https://www.framer.com/motion/) & [Lucide Icons](https://lucide.dev/)
+*   **Real-time Database**: [Firebase Firestore](https://firebase.google.com/products/firestore)
+*   **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+*   **Deployment**: Firebase Hosting & Antigravity Tunnel
 
 ---
 
-### 🤖 3. AI Venue Assistant
+## 🏁 Getting Started
 
-* User selects intent:
+### 1. Clone & Install
+```bash
+git clone https://github.com/GuntassKaur/Quorum.git
+cd Quorum
+npm install
+```
 
-  * “Find Food”
-  * “Nearest Washroom”
-  * “Exit Fast”
-* System provides optimized suggestions instantly
-
----
-
-### 📊 4. Live Crowd Visualization (Digital Twin)
-
-* Simulated stadium map with moving users
-* Shows crowd density in real-time
-* Helps both users and organizers understand flow
+### 2. Run Tactical Node
+```bash
+npm run dev
+```
 
 ---
 
-### 🚨 5. Emergency Mode (Critical Feature)
-
-* One-click activation
-* System:
-
-  * Highlights safest exits
-  * Redirects users individually
-  * Avoids panic zones
-
-👉 Ensures safe evacuation
+## 🛡️ Safety Disclaimer
+*Simulation based on real-world crowd models. This tool is designed for educational and conceptual demonstration of crowd safety logistics.*
 
 ---
 
-### 🌐 6. Offline-Resilient Design
-
-* Works conceptually even during network issues
-* Uses decentralized data logic (simulated mesh)
-
----
-
-### 👻 7. Privacy-First Approach
-
-* No personal identity tracking
-* Only crowd density is analyzed
-
----
-
-## 🎯 Real-World Impact
-
-QUORUM directly improves:
-
-* 🚶 Crowd flow efficiency
-* ⏳ Waiting time reduction
-* 🚨 Safety and emergency response
-* 🎯 Overall attendee satisfaction
-
----
-
-## 🎉 User Experience Benefits
-
-* ✔ Faster entry into stadium
-* ✔ Less time wasted in queues (food, washrooms)
-* ✔ Easy navigation across large venues
-* ✔ Better coordination with real-time updates
-* ✔ Stress-free and enjoyable event experience
-
----
-
-## 🛠️ Tech Stack
-
-* **Platform:** Google Antigravity IDE
-* **Frontend:** Flutter Web / React (lightweight UI)
-* **Backend:** Firebase (real-time database + hosting) Firebase
-* **Logic:** AI-based decision system (simulated)
-
----
-
-## 🎬 Demo Flow
-
-1. User opens QUORUM
-2. Views live crowd heatmap
-3. Selects intent (Food / Washroom / Exit)
-4. Gets best route + wait time
-5. System updates dynamically
-6. Emergency mode shows safe evacuation
-
----
-
-## 🧪 Assumptions
-
-* Crowd data is simulated
-* Wait times are AI-estimated
-* Mesh networking is conceptually demonstrated
-
----
-
-## 🏆 Why QUORUM Stands Out
-
-* Solves **real-world stadium problems**
-* Combines **AI + real-time logic + usability**
-* Focuses on **both efficiency AND user experience**
-* Designed for **practical deployment at scale**
-
----
-
-## 🌍 Future Scope
-
-* Integration with real IoT sensors
-* AR-based navigation system
-* Live deployment in stadiums and public events
-* Expansion to airports, concerts, and smart cities
-
----
-
-## 💬 Final Statement
-
-> QUORUM transforms crowded and confusing venues into intelligent environments where every attendee experiences smooth navigation, minimal waiting, and real-time assistance.
-
----
-
-
-
-
-## 👩‍💻 Author
-
-**Guntass Kaur**
-B.Tech CSE | Aspiring Software Engineer
-
----
-.
+**Built with ❤️ by Antigravity AI.**
+[Live Deployment](https://quorum-77bfa.web.app) | [Internal Preview](https://sharp-kids-stay.loca.lt)

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { collection, onSnapshot, query, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from './firebase';
+import { db, logEvent } from './firebase';
 
 // Components
 import StadiumBlueprint from './components/StadiumBlueprint';
@@ -44,6 +44,11 @@ export default function App() {
     const [alerts, setAlerts] = useState([]);
     const [syncStatus, setSyncStatus] = useState('SYNCING');
 
+    // --- ANALYTICS: PAGE VIEW ---
+    useEffect(() => {
+        logEvent('page_view', { page_title: 'Quorum Home' });
+    }, []);
+
     // --- ALERTS ENGINE ---
     const addAlert = (message, type = 'info') => {
         const id = Date.now();
@@ -78,6 +83,7 @@ export default function App() {
         const sector = input.charAt(0);
         setUserSession(prev => ({ ...prev, seat: input, zone: sector, status: 'SAFE' }));
         setView('dashboard');
+        logEvent('hero_submit', { seat: input, sector: sector });
         addAlert(`Sector ${sector} Identified. Welcome.`, "info");
     };
 
@@ -117,6 +123,7 @@ export default function App() {
             });
             setUserSession(prev => ({ ...prev, action: `${type.toUpperCase()} -> ${selected.id}`, suggestedPath: selected.name, rationale: rationale }));
             setIsAnalyzing(false);
+            logEvent('tactical_action', { action_type: type, target: selected.id });
         }, 800);
     };
 
