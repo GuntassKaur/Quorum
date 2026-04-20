@@ -1,0 +1,31 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Stadium Telemetry: Public read-only for real-time monitoring
+    match /stadium_data/{zoneId} {
+      allow read: if true;
+      allow write: if false; // Only manageable via Admin Console (internal)
+    }
+
+    // User Sessions: Restricted to prevents data pollution
+    match /user_sessions/{sessionId} {
+      allow read: if true; 
+      allow create: if request.resource.data.keys().hasAll(['seat', 'zone', 'timestamp']) 
+                    && request.resource.data.seat.size() <= 5;
+      allow update, delete: if false;
+    }
+
+    // Distress Signals: Public can create, only Admin can read/manage
+    match /distress_signals/{signalId} {
+      allow create: if true;
+      allow read, update, delete: if false; 
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

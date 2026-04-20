@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quorum - Tactical OS</title>
+    <style>
+        /* ABSOLUTE UI CONTROL */
+        body, html {
+            margin: 0;
+            padding: 0;
+            background: #020617;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        /* Visually hide all old UI elements that might be in index.html */
+        #root, .screen, .modal-overlay, #feedback-trigger {
+            display: none !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        #quorum-root {
+            width: 100vw;
+            height: 100vh;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div id="quorum-root"></div>
+    
+    <!-- Vite entry point -->
+    <script type="module" src="/src/main.jsx"></script>
+</body>
+</html>

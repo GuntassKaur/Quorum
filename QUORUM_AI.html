@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Quorum - Advanced Crowd Intelligence Operating System for large-scale venues.">
+    <meta name="author" content="Quorum AI Team">
+    <title>Quorum - Crowd Intelligence OS</title>
+    <style>
+        /* ======================================================
+           DESIGN SYSTEM & TOKENS
+           ====================================================== */
+        :root {
+            --primary: #00ffc8;
+            --primary-rgb: 0, 255, 200;
+            --danger: #ff3333;
+            --warning: #ffaa00;
+            --success: #00ff88;
+            --info: #4488ff;
+            --bg-dark: #060810;
+            --bg-panel: rgba(8, 12, 24, 0.92);
+            --border: rgba(0, 255, 200, 0.15);
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline-color: var(--primary); }
+
+        body { 
+            background: var(--bg-dark); 
+            font-family: var(--font-main); 
+            color: #ffffff; 
+            overflow: hidden; 
+            height: 100vh; 
+            width: 100vw;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Accessibility: High contrast scrollbar */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
+
+        /* ======================================================
+           UTILITIES & BASE COMPONENTS
+           ====================================================== */
+        .screen { 
+            position: fixed; 
+            inset: 0; 
+            display: none; 
+            flex-direction: column;
+            opacity: 0;
+            transition: opacity 500ms ease;
+            z-index: 10;
+        }
+        .screen.active { display: flex; opacity: 1; }
+
+        .btn {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            letter-spacing: 0.15em;
+            cursor: pointer;
+            border-radius: 4px;
+            padding: 12px 24px;
+            transition: var(--transition);
+            text-transform: uppercase;
+            border: 1px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-primary { border-color: var(--primary); color: var(--primary); background: rgba(var(--primary-rgb), 0.05); }
+        .btn-primary:hover, .btn-primary:focus { background: rgba(var(--primary-rgb), 0.15); box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.2); }
+        
+        .btn-danger { border-color: var(--danger); color: var(--danger); background: rgba(255, 51, 51, 0.05); }
+        .btn-danger:hover { background: rgba(255, 51, 51, 0.15); box-shadow: 0 0 20px rgba(255, 51, 51, 0.2); }
+
+        .panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            backdrop-filter: blur(20px);
+            padding: 20px;
+        }
+
+        .label-caps {
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            color: rgba(var(--primary-rgb), 0.6);
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        /* ======================================================
+           ANIMATIONS
+           ====================================================== */
+        @keyframes pulse-soft {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes logo-glow {
+            0%, 100% { text-shadow: 0 0 15px rgba(var(--primary-rgb), 0.3); }
+            50% { text-shadow: 0 0 45px rgba(var(--primary-rgb), 0.8); }
+        }
+
+        @keyframes slide-up {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        /* ======================================================
+           SCREEN 1: LANDING
+           ====================================================== */
+        #screen-landing {
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: radial-gradient(circle at 50% 45%, #0d2a20 0%, #060c0a 45%, #000 100%);
+        }
+
+        .svg-container { position: absolute; inset: 0; pointer-events: none; }
+        #landing-vignette { position: absolute; inset: 0; background: radial-gradient(circle, transparent 30%, rgba(0,0,0,0.85) 100%); pointer-events: none; }
+        
+        .scanline-effect {
+            position: absolute; inset: 0; pointer-events: none;
+            background: linear-gradient(to bottom, transparent 50%, rgba(var(--primary-rgb), 0.02) 50%);
+            background-size: 100% 4px;
+            z-index: 5;
+        }
+
+        .landing-content { z-index: 10; padding: 24px; max-width: 900px; }
+        
+        .status-badge {
+            display: inline-flex; align-items: center; gap: 10px;
+            font-size: 11px; color: var(--primary); letter-spacing: 0.2em;
+            margin-bottom: 24px; animation: slide-up 0.8s ease forwards 0.2s; opacity: 0;
+        }
+        .status-dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; animation: pulse-soft 1.5s infinite; }
+
+        .hero-title { 
+            font-size: clamp(48px, 12vw, 100px); color: var(--primary); 
+            font-weight: 900; letter-spacing: 0.35em; margin: 10px 0;
+            animation: logo-glow 4s ease infinite, slide-up 1s ease forwards 0.4s;
+            opacity: 0; text-transform: uppercase;
+        }
+        
+        .hero-tagline { 
+            font-size: clamp(14px, 2vw, 20px); color: rgba(255,255,255,0.6); 
+            letter-spacing: 0.25em; margin-bottom: 48px; text-transform: uppercase;
+            animation: slide-up 1s ease forwards 0.6s; opacity: 0;
+        }
+
+        .access-grid { 
+            display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;
+            animation: slide-up 1s ease forwards 0.8s; opacity: 0;
+        }
+
+        .metrics-bar {
+            position: absolute; bottom: 60px; display: flex; gap: 40px;
+            font-size: 12px; color: var(--primary); letter-spacing: 0.15em;
+            animation: slide-up 1s ease forwards 1s; opacity: 0;
+            width: 100%; justify-content: center; padding: 0 20px;
+        }
+
+        /* ======================================================
+           SCREEN 2: ATTENDEE HUB
+           ====================================================== */
+        .app-header {
+            height: 64px; background: rgba(0,0,0,0.95);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 32px; z-index: 100;
+        }
+        
+        .app-logo { color: var(--primary); font-weight: 900; letter-spacing: 0.15em; cursor: pointer; text-decoration: none; }
+        .header-meta { font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.1em; }
+
+        .main-stage { flex: 1; display: flex; overflow: hidden; position: relative; }
+
+        @media (max-width: 1000px) {
+            .main-stage { flex-direction: column; overflow-y: auto; }
+            .sidebar { width: 100% !important; border-left: none !important; border-top: 1px solid var(--border); }
+            .viewport { height: 450px; flex: none !important; }
+        }
+
+        .viewport { flex: 1; position: relative; background: #020406; overflow: hidden; }
+        .map-canvas { width: 100%; height: 100%; padding: 40px; }
+
+        .sidebar { 
+            width: 400px; background: rgba(4, 6, 12, 0.6); backdrop-filter: blur(15px); 
+            border-left: 1px solid var(--border); display: flex; flex-direction: column; 
+            gap: 16px; padding: 20px; overflow-y: auto; 
+        }
+
+        /* Map Zone Styles */
+        .zone { cursor: pointer; transition: var(--transition); fill: rgba(255,255,255,0.02); stroke: rgba(255,255,255,0.08); stroke-width: 1.5; }
+        .zone:hover { fill: rgba(var(--primary-rgb), 0.08); stroke: rgba(var(--primary-rgb), 0.4); }
+        .zone.active { fill: rgba(var(--primary-rgb), 0.15) !important; stroke: var(--primary) !important; stroke-width: 3px !important; }
+        .zone.danger { fill: rgba(255, 51, 51, 0.12); stroke: var(--danger); }
+        .zone.warning { fill: rgba(255, 170, 0, 0.1); stroke: var(--warning); }
+
+        /* UI Elements */
+        input {
+            width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+            color: #fff; padding: 14px 16px; border-radius: 6px; font-family: var(--font-mono); 
+            outline: none; transition: var(--transition); font-size: 13px;
+        }
+        input:focus { border-color: var(--primary); background: rgba(var(--primary-rgb), 0.08); box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.1); }
+
+        .chat-log { 
+            height: 220px; overflow-y: auto; font-size: 13px; border-top: 1px solid var(--border); 
+            margin-top: 16px; padding: 12px 0; display: flex; flex-direction: column; gap: 8px;
+        }
+        .msg { border-radius: 4px; padding: 10px 14px; max-width: 90%; }
+        .msg-ai { align-self: flex-start; color: var(--primary); background: rgba(var(--primary-rgb), 0.05); border-left: 2px solid var(--primary); }
+        .msg-user { align-self: flex-end; color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.04); text-align: right; }
+
+        /* ======================================================
+           SCREEN 3: ADMIN CONSOLE
+           ====================================================== */
+        .admin-layout { flex: 1; display: grid; grid-template-columns: 1fr 420px; gap: 20px; padding: 24px; overflow: hidden; }
+        @media (max-width: 1200px) { .admin-layout { grid-template-columns: 1fr; overflow-y: auto; } }
+
+        .admin-scroll { display: flex; flex-direction: column; gap: 20px; overflow-y: auto; padding-right: 10px; }
+
+        .data-row { display: flex; align-items: center; gap: 16px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .progress-track { flex: 1; height: 10px; background: rgba(255,255,255,0.06); border-radius: 5px; overflow: hidden; }
+        .progress-fill { height: 100%; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        .emergency-control {
+            width: 100%; padding: 28px; background: rgba(255,51,51,0.08); border: 2px solid var(--danger);
+            color: var(--danger); font-weight: 900; font-size: 18px; letter-spacing: 0.25em; border-radius: 12px;
+            cursor: pointer; transition: var(--transition);
+        }
+        .emergency-control:hover { background: var(--danger); color: #fff; }
+        .emergency-control.active { animation: pulse-soft 0.8s infinite; background: var(--danger); color: #fff; }
+
+        #incident-log { 
+            height: 300px; overflow-y: auto; font-family: var(--font-mono); font-size: 11px; 
+            color: rgba(255,255,255,0.5); display: flex; flex-direction: column-reverse; gap: 6px;
+        }
+        .log-entry { border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 4px; }
+        .log-time { color: var(--primary); font-weight: bold; margin-right: 8px; }
+
+        /* ======================================================
+           MODALS & OVERLAYS
+           ====================================================== */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000;
+            display: none; align-items: center; justify-content: center; backdrop-filter: blur(10px);
+        }
+        .auth-card { width: 400px; text-align: center; }
+
+        #feedback-trigger {
+            position: fixed; bottom: 24px; right: 24px; z-index: 500;
+            display: none;
+        }
+
+        .aria-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
+    </style>
+</head>
+<body role="application">
+
+    <!-- ======================================================
+         SCREEN 1: LANDING
+         ====================================================== -->
+    <section id="screen-landing" class="screen active" aria-labelledby="landing-title">
+        <div class="scanline-effect" aria-hidden="true"></div>
+        <div class="svg-container" aria-hidden="true">
+            <svg id="landing-stadium" width="100%" height="100%" viewBox="0 0 1000 1000"></svg>
+        </div>
+        <div id="landing-vignette" aria-hidden="true"></div>
+
+        <div class="landing-content">
+            <div class="status-badge">
+                <div class="status-dot"></div>
+                LIVE STATUS: 105,000 ACTIVE NODES
+            </div>
+            <h1 id="landing-title" class="hero-title">Quorum</h1>
+            <p class="hero-tagline">Quorum crowd intelligence os</p>
+            
+            <div class="access-grid">
+                <button class="btn btn-primary" onclick="APP.nav.to('screen-attendee')" aria-label="Enter Attendee Hub">
+                    ◉ ATTENDEE HUB
+                </button>
+                <button class="btn btn-danger" onclick="APP.auth.show()" aria-label="Access Admin Control">
+                    ⬡ ADMIN CONSOLE
+                </button>
+            </div>
+        </div>
+
+        <div class="metrics-bar" role="complementary">
+            <div>STABILITY: 99.9%</div>
+            <div aria-hidden="true">|</div>
+            <div>SAFETY INDEX: <span id="landing-safety">94</span>%</div>
+            <div aria-hidden="true">|</div>
+            <div>ACTIVE SECTORS: 6</div>
+        </div>
+    </section>
+
+    <!-- ======================================================
+         SCREEN 2: ATTENDEE HUB
+         ====================================================== -->
+    <section id="screen-attendee" class="screen" aria-labelledby="attendee-title">
+        <header class="app-header">
+            <a href="#" class="app-logo" onclick="APP.nav.to('screen-landing')">QUORUM</a>
+            <div id="attendee-title" class="header-meta">Attendee Safety Portal</div>
+            <div id="header-weather" style="font-weight: bold; color: var(--primary);">☀ 28°C CLEAR</div>
+        </header>
+
+        <div class="main-stage">
+            <div class="viewport">
+                <svg id="venue-map" class="map-canvas" viewBox="0 0 800 600" aria-label="Interactive venue map">
+                    <ellipse cx="400" cy="300" rx="360" ry="220" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="4" />
+                    <ellipse cx="400" cy="300" rx="150" ry="90" fill="rgba(0,255,200,0.02)" stroke="rgba(0,255,200,0.1)" />
+                    
+                    <g id="map-zones-group">
+                        <!-- Zones rendered by script -->
+                    </g>
+                    
+                    <path id="nav-path" fill="none" stroke-width="4" stroke-dasharray="10 5" style="display:none; transition: all 1s;" />
+                </svg>
+            </div>
+
+            <aside class="sidebar">
+                <div class="panel">
+                    <label for="seat-query" class="label-caps">Locate Your Seat</label>
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" id="seat-query" placeholder="e.g. A12, C42" aria-required="true">
+                        <button class="btn btn-primary" onclick="APP.attendee.locate()" style="padding: 10px 16px;">FIND</button>
+                    </div>
+                    <div id="location-intel" style="display:none; margin-top:20px; border-top:1px solid var(--border); padding-top:15px; animation: slide-up 0.5s ease;">
+                        <div style="color:var(--primary); font-weight:900; font-size:20px;">SECTOR <span id="intel-zone">?</span></div>
+                        <div style="font-size:12px; color:rgba(255,255,255,0.6); margin-top:5px; letter-spacing: 1px;">
+                            DENSITY: <span id="intel-status">OPTIMAL</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel" style="flex:1; display:flex; flex-direction:column;">
+                    <label class="label-caps">AI Safety Assistant</label>
+                    <div id="attendee-chat" class="chat-log" role="log"></div>
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" id="attendee-input" placeholder="Ask about safety or exits..." onkeydown="if(event.key==='Enter') APP.attendee.ask()">
+                        <button class="btn btn-primary" onclick="APP.attendee.ask()" style="padding: 10px 16px;" aria-label="Send Message">SEND</button>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="APP.attendee.routeExit()" style="background:rgba(var(--primary-rgb), 0.1); border-color:var(--success); color:var(--success); width: 100%;">
+                    NEAREST EMERGENCY EXIT
+                </button>
+            </aside>
+        </div>
+    </section>
+
+    <!-- ======================================================
+         SCREEN 3: ADMIN CONSOLE
+         ====================================================== -->
+    <section id="screen-admin" class="screen" aria-labelledby="admin-title">
+        <header class="app-header">
+            <div id="admin-title" class="app-logo">ADMIN CONTROL</div>
+            <div style="display:flex; gap:40px; font-size:13px; font-family: var(--font-mono); color: var(--primary);">
+                <div>SAFETY: <span id="admin-safety">94%</span></div>
+                <div>UPTIME: <span id="admin-uptime">00:00:00</span></div>
+            </div>
+            <button class="btn btn-danger" onclick="APP.nav.to('screen-landing')" style="padding:8px 20px; font-size:11px;">LOGOUT</button>
+        </header>
+
+        <div class="admin-layout">
+            <div class="admin-scroll">
+                <div class="panel">
+                    <label class="label-caps">Global Sector Intelligence</label>
+                    <div id="admin-zone-list" style="margin-top:15px;"></div>
+                </div>
+                
+                <div class="panel">
+                    <label for="admin-broadcast" class="label-caps">Network Broadcast</label>
+                    <textarea id="admin-broadcast" placeholder="Push emergency message to all mobile nodes..." style="width:100%; height:100px; background:rgba(255,255,255,0.03); border:1px solid var(--border); color:#fff; padding:15px; margin-top:12px; border-radius:8px; outline:none; font-family:inherit; resize: none;"></textarea>
+                    <button class="btn btn-primary" onclick="APP.admin.broadcast()" style="width:100%; margin-top:16px;">DEPLOY NOTIFICATION</button>
+                </div>
+            </div>
+
+            <div class="admin-scroll">
+                <div class="panel">
+                    <label class="label-caps">Emergency Override</label>
+                    <button id="master-emergency" class="emergency-control" style="margin-top:15px;" onclick="APP.admin.toggleEmergency()">TRIGGER EMERGENCY</button>
+                    <div style="font-size:12px; color:rgba(255,255,255,0.4); text-align:center; margin-top:15px; font-style: italic;">ALL GATES WILL RELEASE UPON ACTIVATION</div>
+                </div>
+
+                <div class="panel" style="flex:1; display:flex; flex-direction:column;">
+                    <label class="label-caps">Tactical Incident Log</label>
+                    <div id="incident-log" role="log"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================
+         MODALS & OVERLAYS
+         ====================================================== -->
+    <div id="modal-auth" class="modal-overlay">
+        <div class="panel auth-card">
+            <h2 class="label-caps" style="font-size: 16px; margin-bottom: 12px;">Admin Authentication</h2>
+            <p style="font-size:12px; color:rgba(255,255,255,0.4); margin-bottom:32px;">Please enter your credentials to access the Quorum system.</p>
+            <input type="password" id="auth-password" placeholder="PASSWORD" style="text-align:center; margin-bottom:16px;" aria-label="Enter Admin Password">
+            <button class="btn btn-primary" onclick="APP.auth.login()" style="width:100%;">AUTHENTICATE</button>
+            <button class="btn" onclick="APP.auth.hide()" style="width:100%; margin-top:12px; font-size: 10px; color: rgba(255,255,255,0.3);">CANCEL</button>
+        </div>
+    </div>
+
+    <div id="feedback-trigger">
+        <button class="btn panel" onclick="APP.ui.toggleFeedback()" style="color: var(--primary); font-size: 11px;">◈ FEEDBACK</button>
+    </div>
+
+    <!-- ======================================================
+         CORE LOGIC (THE APP ENGINE)
+         ====================================================== -->
+    <script>
+        /**
+         * QUORUM APP ENGINE
+         * High-performance, secure, and accessible crowd intelligence OS.
+         */
+        const APP = (() => {
+            'use strict';
+
+            // Internal State
+            const state = {
+                startTime: Date.now(),
+                isEmergency: false,
+                currentZone: null,
+                zones: {
+                    A: { name: 'NORTH STAND', density: 88, status: 'HIGH', center: {x: 400, y: 140}, path: 'M 320,120 Q 400,80 480,120 L 460,200 Q 400,170 340,200 Z' },
+                    B: { name: 'EAST WING', density: 42, status: 'LOW', center: {x: 540, y: 300}, path: 'M 500,200 L 580,220 Q 600,300 580,380 L 500,340 Q 510,300 500,200 Z' },
+                    C: { name: 'SOUTH STAND', density: 94, status: 'CRITICAL', center: {x: 400, y: 410}, path: 'M 480,420 Q 400,460 320,420 L 340,340 Q 400,370 460,340 Z' },
+                    D: { name: 'WEST WING', density: 65, status: 'MED', center: {x: 260, y: 300}, path: 'M 300,340 L 220,380 Q 200,300 220,220 L 300,200 Q 290,300 300,340 Z' },
+                    E: { name: 'NE CORNER', density: 31, status: 'LOW', center: {x: 520, y: 160}, path: 'M 480,120 Q 550,140 580,220 L 500,200 Q 495,160 480,120 Z' },
+                    F: { name: 'SW CORNER', density: 55, status: 'MED', center: {x: 280, y: 400}, path: 'M 320,420 Q 250,440 220,380 L 300,340 Q 305,380 320,420 Z' }
+                }
+            };
+
+            // DOM Selectors (cached)
+            const dom = {
+                screens: document.querySelectorAll('.screen'),
+                authModal: document.getElementById('modal-auth'),
+                incidentLog: document.getElementById('incident-log'),
+                attendeeChat: document.getElementById('attendee-chat'),
+                adminZoneList: document.getElementById('admin-zone-list'),
+                mapGroup: document.getElementById('map-zones-group')
+            };
+
+            // Initializer
+            const init = () => {
+                renderMap();
+                animateLanding();
+                startSimulation();
+                APP.nav.to('screen-landing');
+            };
+
+            // --- NAVIGATION ---
+            const nav = {
+                to: (screenId) => {
+                    dom.screens.forEach(s => {
+                        s.classList.remove('active');
+                        setTimeout(() => s.style.display = 'none', 500);
+                    });
+                    const target = document.getElementById(screenId);
+                    setTimeout(() => {
+                        target.style.display = 'flex';
+                        requestAnimationFrame(() => target.classList.add('active'));
+                    }, 500);
+                    
+                    document.getElementById('feedback-trigger').style.display = 
+                        (screenId === 'screen-landing') ? 'none' : 'block';
+                }
+            };
+
+            // --- AUTHENTICATION ---
+            const auth = {
+                show: () => dom.authModal.style.display = 'flex',
+                hide: () => dom.authModal.style.display = 'none',
+                login: () => {
+                    const pass = document.getElementById('auth-password').value;
+                    if (pass === '1234' || pass === 'quorum') {
+                        auth.hide();
+                        nav.to('screen-admin');
+                        logIncident("ADMIN ACCESS AUTHORIZED");
+                    } else {
+                        alert("AUTHENTICATION FAILED. TRY '1234'");
+                    }
+                }
+            };
+
+            // --- ATTENDEE HUB ---
+            const attendee = {
+                locate: () => {
+                    const query = document.getElementById('seat-query').value.toUpperCase();
+                    if (!query) return;
+                    const id = query.charAt(0);
+                    if (state.zones[id]) {
+                        attendee.selectZone(id);
+                        const intel = document.getElementById('location-intel');
+                        intel.style.display = 'block';
+                        document.getElementById('intel-zone').textContent = id;
+                        document.getElementById('intel-status').textContent = state.zones[id].status;
+                        addChatMessage('ai', `Sector ${id} reached. Status: ${state.zones[id].status}. Oxygen levels optimal.`);
+                    }
+                },
+                selectZone: (id) => {
+                    state.currentZone = id;
+                    const paths = dom.mapGroup.querySelectorAll('.zone');
+                    paths.forEach(p => p.classList.toggle('active', p.dataset.id === id));
+                },
+                ask: () => {
+                    const input = document.getElementById('attendee-input');
+                    const msg = input.value.trim();
+                    if (!msg) return;
+                    addChatMessage('user', msg);
+                    input.value = '';
+                    
+                    setTimeout(() => {
+                        const low = msg.toLowerCase();
+                        let reply = "Quorum AI is monitoring all sectors. Ask about 'safety', 'exits', or 'wait times'.";
+                        if (low.includes('safe')) reply = "Safety levels are nominal (94%). Sector C shows high density.";
+                        else if (low.includes('exit')) reply = "Nearest emergency exit is North Gate (Sector A). Route available.";
+                        else if (low.includes('wait')) reply = "Wait times: Washrooms (2m), Food (5m).";
+                        addChatMessage('ai', reply);
+                    }, 600);
+                },
+                routeExit: () => {
+                    if (!state.currentZone) return addChatMessage('ai', "Locate your seat first to calculate evacuation path.");
+                    const path = document.getElementById('nav-path');
+                    const start = state.zones[state.currentZone].center;
+                    path.setAttribute('d', `M ${start.x},${start.y} L 400,50`);
+                    path.setAttribute('stroke', 'var(--success)');
+                    path.style.display = 'block';
+                    addChatMessage('ai', "EMERGENCY ROUTE ACTIVATED. Proceed to North Gate Sector A.");
+                }
+            };
+
+            // --- ADMIN CONTROLS ---
+            const admin = {
+                broadcast: () => {
+                    const text = document.getElementById('admin-broadcast').value;
+                    if (!text) return;
+                    logIncident(`BROADCAST: ${text}`);
+                    alert("BROADCAST PUSHED TO 105,000 NODES");
+                    document.getElementById('admin-broadcast').value = '';
+                },
+                toggleEmergency: () => {
+                    state.isEmergency = !state.isEmergency;
+                    const btn = document.getElementById('master-emergency');
+                    if (state.isEmergency) {
+                        btn.classList.add('active');
+                        btn.textContent = 'CANCEL EMERGENCY';
+                        document.body.style.animation = 'pulse-soft 1s infinite';
+                        logIncident("!!! EMERGENCY PROTOCOL INITIATED !!!");
+                    } else {
+                        btn.classList.remove('active');
+                        btn.textContent = 'TRIGGER EMERGENCY';
+                        document.body.style.animation = '';
+                        logIncident("INFO: Emergency reset to nominal.");
+                    }
+                }
+            };
+
+            // --- CORE ENGINE & SIMULATION ---
+            const renderMap = () => {
+                dom.mapGroup.innerHTML = '';
+                Object.entries(state.zones).forEach(([id, z]) => {
+                    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    path.setAttribute("d", z.path);
+                    path.classList.add("zone");
+                    path.dataset.id = id;
+                    path.onclick = () => attendee.selectZone(id);
+                    dom.mapGroup.appendChild(path);
+                });
+            };
+
+            const animateLanding = () => {
+                const svg = document.getElementById('landing-stadium');
+                for (let i = 0; i < 15; i++) {
+                    const e = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+                    e.setAttribute("cx", "500"); e.setAttribute("cy", "480");
+                    e.setAttribute("rx", (150 + i * 40)); e.setAttribute("ry", (90 + i * 25));
+                    e.setAttribute("fill", "none");
+                    e.setAttribute("stroke", `rgba(0, 255, 200, ${0.03 + i * 0.01})`);
+                    e.setAttribute("stroke-width", "1");
+                    svg.appendChild(e);
+                }
+            };
+
+            const startSimulation = () => {
+                setInterval(() => {
+                    Object.values(state.zones).forEach(z => {
+                        z.density = Math.max(20, Math.min(99, z.density + (Math.random() - 0.45) * 5));
+                        z.status = z.density > 90 ? 'CRITICAL' : (z.density > 70 ? 'HIGH' : 'LOW');
+                    });
+                    updateAdminDashboard();
+                    updateTelemetry();
+                }, 4000);
+            };
+
+            const updateAdminDashboard = () => {
+                if (document.getElementById('screen-admin').classList.contains('active')) {
+                    dom.adminZoneList.innerHTML = '';
+                    Object.entries(state.zones).forEach(([id, z]) => {
+                        const row = document.createElement('div');
+                        row.className = 'data-row';
+                        const color = z.status === 'CRITICAL' ? 'var(--danger)' : (z.status === 'HIGH' ? 'var(--warning)' : 'var(--primary)');
+                        row.innerHTML = `
+                            <div style="width:30px; font-weight:900; color:${color}">${id}</div>
+                            <div class="progress-track"><div class="progress-fill" style="width:${z.density}%; background:${color}"></div></div>
+                            <div style="width:60px; font-size:12px; text-align:right; font-weight:bold;">${Math.round(z.density)}%</div>
+                        `;
+                        dom.adminZoneList.appendChild(row);
+                    });
+                }
+            };
+
+            const updateTelemetry = () => {
+                const diff = Math.floor((Date.now() - state.startTime) / 1000);
+                const h = Math.floor(diff/3600).toString().padStart(2,'0');
+                const m = Math.floor((diff%3600)/60).toString().padStart(2,'0');
+                const s = (diff%60).toString().padStart(2,'0');
+                const timer = document.getElementById('admin-uptime');
+                if (timer) timer.textContent = `${h}:${m}:${s}`;
+            };
+
+            const addChatMessage = (role, text) => {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `msg msg-${role}`;
+                msgDiv.textContent = (role === 'ai' ? '[AI] ' : '[YOU] ') + text;
+                dom.attendeeChat.appendChild(msgDiv);
+                dom.attendeeChat.scrollTop = dom.attendeeChat.scrollHeight;
+            };
+
+            const logIncident = (text) => {
+                const time = new Date().toLocaleTimeString();
+                const div = document.createElement('div');
+                div.className = 'log-entry';
+                const timeSpan = document.createElement('span');
+                timeSpan.className = 'log-time';
+                timeSpan.textContent = `[${time}]`;
+                div.appendChild(timeSpan);
+                div.appendChild(document.createTextNode(text));
+                dom.incidentLog.appendChild(div);
+                dom.incidentLog.scrollTop = dom.incidentLog.scrollHeight;
+            };
+
+            return {
+                init,
+                nav,
+                auth,
+                attendee,
+                admin,
+                ui: {
+                    toggleFeedback: () => alert("FEEDBACK MODULE INITIATED. THANK YOU.")
+                }
+            };
+        })();
+
+        // Start App
+        APP.init();
+    </script>
+</body>
+</html>
