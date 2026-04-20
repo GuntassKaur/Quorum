@@ -215,43 +215,47 @@ export default function App() {
                     <motion.div 
                         key="dashboard"
                         initial={{ opacity: 0, filter: 'blur(20px)' }} animate={{ opacity: 1, filter: 'blur(0px)' }}
-                        className="relative z-10 w-full h-full flex flex-col pt-24"
+                        className="relative z-10 w-full h-full flex flex-col pt-20"
                     >
-                        <div className="flex-1 grid grid-cols-1 lg:grid-cols-[420px_1fr] gap-8 p-6 md:p-10 overflow-hidden">
-                            <aside className="flex flex-col gap-8 overflow-y-auto scrollbar-hide pb-20">
-                                <div className="bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-8 flex flex-col gap-8 shadow-2xl">
+                        <div className="flex-1 grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-12 p-8 md:p-14 overflow-hidden">
+                            <aside className="flex flex-col gap-10 overflow-y-auto scrollbar-hide pb-20">
+                                {/* LOCATION HUD */}
+                                <div className="bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[3rem] p-10 flex flex-col gap-8 shadow-2xl">
                                     <div className="flex flex-col gap-1">
-                                        <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40">My Location</h3>
-                                        <span className="text-2xl font-black uppercase">Sector {userSession.zone}2</span>
+                                        <h3 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#10b981]/60">Your Sector</h3>
+                                        <span className="text-4xl font-black uppercase tracking-tighter">Sector {userSession.zone}2</span>
                                     </div>
+                                    
                                     <div className="grid grid-cols-1 gap-4">
-                                        <button onClick={() => handleAction('exit')} className="group relative h-20 bg-white/5 border border-white/10 rounded-3xl flex items-center px-8 gap-6 hover:bg-emerald-500/10 hover:border-emerald-500/50 transition-all">
-                                            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500 group-hover:text-black transition-all"><LogOut size={20} /></div>
-                                            <span className="text-xs font-black uppercase tracking-[0.2em]">EXIT</span>
+                                        <button onClick={() => handleAction('exit')} className="group relative h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center px-6 gap-4 hover:bg-emerald-500/10 hover:border-emerald-500/50 transition-all">
+                                            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500 group-hover:text-black transition-all"><LogOut size={18} /></div>
+                                            <span className="text-[10px] font-black uppercase tracking-[0.3em]">EXIT GATE</span>
                                         </button>
-                                        <button onClick={() => handleAction('washroom')} className="group relative h-20 bg-white/5 border border-white/10 rounded-3xl flex items-center px-8 gap-6 hover:bg-blue-500/10 hover:border-blue-500/50 transition-all">
-                                            <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:bg-blue-500 group-hover:text-black transition-all"><Droplets size={20} /></div>
-                                            <span className="text-xs font-black uppercase tracking-[0.2em]">WASHROOM</span>
+                                        <button onClick={() => handleAction('washroom')} className="group relative h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center px-6 gap-4 hover:bg-blue-500/10 hover:border-blue-500/50 transition-all">
+                                            <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:bg-blue-500 group-hover:text-black transition-all"><Droplets size={18} /></div>
+                                            <span className="text-[10px] font-black uppercase tracking-[0.3em]">WASHROOM</span>
                                         </button>
-                                        <button onClick={() => handleAction('food')} className="group relative h-20 bg-white/5 border border-white/10 rounded-3xl flex items-center px-8 gap-6 hover:bg-amber-500/10 hover:border-amber-500/50 transition-all">
-                                            <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400 group-hover:bg-amber-500 group-hover:text-black transition-all"><Coffee size={20} /></div>
-                                            <span className="text-xs font-black uppercase tracking-[0.2em]">FOOD</span>
+                                        <button onClick={() => handleAction('food')} className="group relative h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center px-6 gap-4 hover:bg-amber-500/10 hover:border-amber-500/50 transition-all">
+                                            <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400 group-hover:bg-amber-500 group-hover:text-black transition-all"><Coffee size={18} /></div>
+                                            <span className="text-[10px] font-black uppercase tracking-[0.3em]">FOOD COURT</span>
                                         </button>
                                     </div>
                                 </div>
 
+                                {/* SMART RATIONALE */}
                                 {userSession.rationale && (
-                                    <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-[2.5rem] p-8 flex flex-col gap-4">
-                                        <div className="flex items-center gap-4"><Info size={18} className="text-[#10b981]" /><span className="text-[10px] font-black uppercase tracking-[0.4em] text-[#10b981]">Route Advice</span></div>
-                                        <p className="text-sm font-bold text-white leading-relaxed">{userSession.rationale}</p>
+                                    <div className="bg-emerald-500/5 border border-emerald-500/10 rounded-[3rem] p-10 flex flex-col gap-4">
+                                        <div className="flex items-center gap-4"><Info size={16} className="text-[#10b981]" /><span className="text-[9px] font-black uppercase tracking-[0.4em] text-[#10b981]/60">AI Intelligence</span></div>
+                                        <p className="text-sm font-medium text-white/80 leading-relaxed italic">"{userSession.rationale}"</p>
                                     </div>
                                 )}
                             </aside>
 
-                            <div className="relative flex items-center justify-center overflow-hidden rounded-[3rem] md:rounded-[4rem] bg-black/20 border border-white/5 group shadow-2xl">
-                                <div className="absolute top-10 left-10 z-10 flex items-center gap-3 px-6 py-2 bg-black/40 backdrop-blur-2xl border border-white/10 rounded-full">
-                                    <div className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse" />
-                                    <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/80">LIVE VIEW — CROWD ACTIVE</span>
+                            {/* TACTICAL MAP AREA */}
+                            <div className="relative flex items-center justify-center overflow-hidden rounded-[4rem] bg-black/10 border border-white/5 shadow-[0_0_100px_rgba(0,0,0,0.5)]">
+                                <div className="absolute top-12 left-12 z-10 flex items-center gap-4 px-6 py-2 bg-black/40 backdrop-blur-3xl border border-white/10 rounded-full">
+                                    <div className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse shadow-[0_0_10px_#10b981]" />
+                                    <span className="text-[8px] font-black uppercase tracking-[0.4em] text-white/60">LIVE STADIUM TELEMETRY</span>
                                 </div>
                                 <StadiumBlueprint zones={zones} activeZone={userSession.zone} navigationPath={navigationPath} onZoneSelect={(id) => setUserSession(prev => ({ ...prev, zone: id }))} />
                             </div>
