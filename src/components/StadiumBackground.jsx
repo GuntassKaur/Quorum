@@ -2,26 +2,24 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 /**
- * StadiumBackground Component
- * Ultra-high-fidelity cinematic layer for Quorum OS.
- * Features: Slow zoom, Floodlight flicker, Haze/Smoke, Ambient particles.
+ * StadiumBackground Component v8.0 (Maximum Fidelity)
+ * High-performance cinematic layer with volumetric lighting and lens flares.
  */
 export default function StadiumBackground() {
-  const bgImage = "file:///C:/Users/Guntass%20Kaur/.gemini/antigravity/brain/152e38ea-dec9-4198-80b7-f7647dc7d2b3/ultra_8k_night_stadium_atmosphere_1776717309055.png";
+  const bgImage = "file:///C:/Users/Guntass%20Kaur/.gemini/antigravity/brain/152e38ea-dec9-4198-80b7-f7647dc7d2b3/epic_photorealistic_night_stadium_v2_1776721356408.png";
 
   return (
     <div className="fixed inset-0 z-0 overflow-hidden bg-black pointer-events-none">
       
-      {/* 8K STADIUM CINEMATIC WITH SLOW ZOOM */}
+      {/* 8K PHOTOREALISTIC STADIUM BASE */}
       <motion.div 
-        initial={{ scale: 1.2, rotate: 0.01 }}
+        initial={{ scale: 1.3 }}
         animate={{ 
-          scale: [1.2, 1.1, 1.2],
-          x: [0, -20, 0],
-          opacity: 0.6
+          scale: [1.3, 1.15, 1.3],
+          rotate: [0, 1, 0]
         }}
         transition={{ 
-          duration: 60, 
+          duration: 45, 
           repeat: Infinity, 
           ease: "easeInOut"
         }}
@@ -29,65 +27,39 @@ export default function StadiumBackground() {
         style={{ backgroundImage: `url(${bgImage})` }}
       />
 
-      {/* FLOODLIGHT FLICKER EFFECT */}
+      {/* VOLUMETRIC LIGHT BEAMS (TOP LEFT/RIGHT) */}
+      <div className="absolute inset-0 opacity-40">
+          <div className="absolute top-0 left-[-10%] w-[50%] h-[150%] bg-gradient-to-br from-white/20 via-transparent to-transparent rotate-[25deg] blur-[100px]" />
+          <div className="absolute top-0 right-[-10%] w-[50%] h-[150%] bg-gradient-to-bl from-white/20 via-transparent to-transparent rotate-[-25deg] blur-[100px]" />
+      </div>
+
+      {/* DYNAMIC LENS FLARE */}
       <motion.div 
         animate={{ 
-          opacity: [0.05, 0.1, 0.05, 0.08, 0.05],
+          opacity: [0.1, 0.3, 0.1],
+          scale: [1, 1.2, 1]
         }}
-        transition={{ 
-          duration: 4, 
-          repeat: Infinity, 
-          ease: "linear"
-        }}
+        transition={{ duration: 8, repeat: Infinity }}
+        className="absolute top-10 left-1/4 w-[600px] h-[600px] bg-white/5 rounded-full blur-[150px]"
+      />
+
+      {/* FLOODLIGHT PULSE & FLICKER */}
+      <motion.div 
+        animate={{ opacity: [0.03, 0.08, 0.03, 0.05, 0.03] }}
+        transition={{ duration: 5, repeat: Infinity }}
         className="absolute inset-0 bg-white"
       />
 
-      {/* HAZE / SMOKE DRIFT */}
-      <motion.div 
-        animate={{ 
-          x: ["-50%", "0%"],
-          opacity: [0.1, 0.2, 0.1]
-        }}
-        transition={{ 
-          duration: 30, 
-          repeat: Infinity, 
-          ease: "linear" 
-        }}
-        className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dust.png')] opacity-20"
-      />
+      {/* ATMOSPHERIC HAZE & DEPTH */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/80" />
+      <div className="absolute inset-0 bg-black/30 backdrop-blur-[0.5px]" />
+      
+      {/* VIGNETTE (FOCUSING ON CENTER) */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.85)_100%)]" />
 
-      {/* AMBIENT PARTICLES (CROWD ENERGY) */}
-      <div className="absolute inset-0 overflow-hidden">
-          {[...Array(20)].map((_, i) => (
-              <motion.div
-                  key={i}
-                  initial={{ 
-                    x: Math.random() * 100 + "%", 
-                    y: Math.random() * 100 + "%",
-                    scale: Math.random() * 0.5 + 0.5,
-                    opacity: 0
-                  }}
-                  animate={{ 
-                    y: [null, "-20%"],
-                    opacity: [0, 0.4, 0]
-                  }}
-                  transition={{ 
-                    duration: Math.random() * 10 + 5, 
-                    repeat: Infinity, 
-                    delay: Math.random() * 10 
-                  }}
-                  className="absolute w-1 h-1 bg-[#10b981] rounded-full blur-[1px]"
-              />
-          ))}
-      </div>
-
-      {/* CINEMATIC OVERLAYS FOR READABILITY */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-transparent to-black/90" />
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-[1px]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.7)_100%)]" />
-
-      {/* SCANLINE / NOISE HINT */}
-      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-overlay" />
+      {/* SCANLINE OVERLAY (BROADCAST FEEL) */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+           style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, #fff 3px)' }} />
     </div>
   );
 }

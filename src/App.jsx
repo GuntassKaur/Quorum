@@ -149,56 +149,64 @@ export default function App() {
                         key="landing"
                         initial={{ opacity: 0 }} 
                         animate={{ opacity: 1 }} 
-                        exit={{ opacity: 0, filter: 'blur(20px)' }}
+                        exit={{ opacity: 0, scale: 1.1, filter: 'blur(30px)' }}
                         className="relative z-50 w-full h-full flex flex-col items-center justify-center p-6 text-center"
                     >
-                        {/* CINEMATIC OVERLAY */}
-                        <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
+                        {/* TACTICAL HUD OVERLAY */}
+                        <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px]" />
                         
-                        <div className="relative z-10 max-w-4xl w-full flex flex-col items-center">
-                            <motion.h1 
-                                initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}
-                                className="text-[80px] md:text-[160px] font-black tracking-tighter leading-none mb-6 drop-shadow-[0_0_50px_rgba(255,255,255,0.15)]"
+                        <div className="relative z-10 max-w-5xl w-full flex flex-col items-center">
+                            <motion.div
+                                initial={{ scale: 0.8, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                transition={{ duration: 1, ease: "easeOut" }}
+                                className="mb-8"
                             >
-                                QUORUM
-                            </motion.h1>
+                                <h1 className="text-[90px] md:text-[180px] font-black tracking-[-0.05em] leading-none text-white drop-shadow-[0_0_80px_rgba(16,185,129,0.3)]">
+                                    QUORUM
+                                </h1>
+                                <div className="h-1 w-full bg-gradient-to-r from-transparent via-[#10b981] to-transparent mt-[-10px] opacity-50" />
+                            </motion.div>
                             
                             <motion.p 
-                                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
-                                className="text-xl md:text-4xl font-bold text-white mb-4 drop-shadow-lg"
+                                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
+                                className="text-2xl md:text-5xl font-black text-white mb-6 uppercase tracking-tight italic"
                             >
                                 "Find your way in a crowded stadium"
                             </motion.p>
                             
                             <motion.p 
                                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
-                                className="text-xs md:text-xl font-medium text-white/40 uppercase tracking-[0.3em] mb-20"
+                                className="text-[10px] md:text-sm font-black text-[#10b981] uppercase tracking-[0.6em] mb-24 bg-[#10b981]/10 px-6 py-2 rounded-full border border-[#10b981]/20"
                             >
                                 Enter your seat and get the best route instantly
                             </motion.p>
 
-                            {/* PRIMARY INPUT AREA */}
+                            {/* HUD INPUT CONTROL */}
                             <motion.form 
                                 onSubmit={handleHeroSubmit}
                                 initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.8 }}
-                                className="w-full max-w-3xl flex flex-col items-center gap-8"
+                                className="w-full max-w-3xl flex flex-col items-center gap-10"
                             >
                                 <div className="relative w-full group">
+                                    <div className="absolute -inset-1 bg-gradient-to-r from-[#10b981] to-blue-500 rounded-[3rem] blur opacity-20 group-hover:opacity-40 transition duration-1000 group-focus-within:opacity-60" />
                                     <input 
                                         type="text" 
                                         value={seatInput}
                                         onChange={(e) => setSeatInput(e.target.value)}
-                                        placeholder="Enter your seat (e.g. A12)"
-                                        className="w-full h-20 md:h-32 bg-white/5 backdrop-blur-3xl border-2 border-white/10 rounded-[2.5rem] px-12 text-2xl md:text-4xl font-black text-white text-center placeholder:text-white/10 focus:outline-none focus:border-[#10b981] focus:ring-8 focus:ring-[#10b981]/10 transition-all shadow-2xl group-hover:bg-white/10"
+                                        placeholder="ENTER SEAT (E.G. A12)"
+                                        className="relative w-full h-24 md:h-36 bg-black/40 backdrop-blur-3xl border-2 border-white/10 rounded-[2.5rem] px-12 text-3xl md:text-5xl font-black text-white text-center placeholder:text-white/5 focus:outline-none focus:border-[#10b981] transition-all shadow-2xl"
                                         autoFocus
                                     />
-                                    <div className="absolute inset-0 rounded-[2.5rem] pointer-events-none shadow-[0_0_60px_rgba(16,185,129,0.1)] group-focus-within:shadow-[0_0_80px_rgba(16,185,129,0.2)] transition-all" />
                                 </div>
                                 <button 
                                     type="submit"
-                                    className="px-16 py-6 bg-[#10b981] text-black font-black uppercase tracking-[0.4em] rounded-full hover:scale-105 active:scale-95 transition-all shadow-[0_0_50px_rgba(16,185,129,0.4)] flex items-center gap-6"
+                                    className="group relative px-20 py-8 bg-[#10b981] text-black font-black uppercase tracking-[0.5em] rounded-full hover:scale-105 active:scale-95 transition-all shadow-[0_0_60px_rgba(16,185,129,0.5)] overflow-hidden"
                                 >
-                                    Show My Way <ArrowRight size={24} />
+                                    <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500" />
+                                    <span className="relative flex items-center gap-4">
+                                        Show My Way <ArrowRight size={28} />
+                                    </span>
                                 </button>
                             </motion.form>
                         </div>
